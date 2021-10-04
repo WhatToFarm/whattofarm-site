@@ -1,0 +1,37 @@
+.form {
+  padding: 15px 5px;
+}
+.form-horizontal {
+  padding: 5px;
+  .table th, .table td {
+    padding: .25rem;
+  }
+  //&--detail {
+  //  width: auto;
+  //}
+  .form-control {
+    padding: .25rem .1rem;
+    height: calc((2 * .25rem) + (2 * .1px) + (calc(0.75rem * 1.5)));
+    font-size: 0.75rem;
+  }
+}
+.form-horizontal, .form {
+  .form-group {
+    padding-left: 5px;
+    padding-right: 5px;
+    .form-control, .btn {
+      padding: .35rem .2rem;
+      height: calc((2 * .35rem) + (2 * .2px) + (calc(0.75rem * 1.5)));
+      font-size: 0.75rem;
+    }
+    .alert {
+      padding: .35rem .2rem;
+    }
+  }
+}
+
+@media (max-width: 769px) {
+  .form-horizontal--detail {
+    width: max-content;
+  }
+}

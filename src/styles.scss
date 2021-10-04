@@ -1,0 +1,423 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+$white:                       #fff;
+$border-width:                1px;
+$border-color:                #EAEAEA;
+$input-padding-y:             .5rem;
+$input-padding-x:             1rem;
+$input-sm-padding-y:          3px;
+$input-sm-padding-x:          6px;
+$btn-padding-y:               $input-padding-y;
+$btn-padding-x:               $input-padding-x;
+$btn-sm-padding-y:            $input-sm-padding-y;
+$btn-sm-padding-x:            $input-sm-padding-x;
+$font-size-base:              .875rem;
+$font-size-sm:                .75rem;
+$font-size-lg:                1rem;
+$line-height-base:            1.5;
+$border-radius:               6px;
+$form-control-solid-color:    #F2F2F2;
+$btn-border-radius:           $border-radius;
+$font-weight-bold:            500;
+$font-weight-bolder:          600;
+$main-purple:                 #1900CA;
+$main-success:                #5CB85C;
+$main-orange:                 #FF523A;
+$tab-w:                       36px;
+$tab-h:                       30px;
+$btn-light-bg:                #F2F2F2;
+
+$base-text-height:            calc(#{$font-size-base} * #{$line-height-base});
+$input-height:                calc((2 * #{$input-padding-y}) + (2 * #{$border-width}) + (#{$base-text-height}));
+
+$custom-widths: (20, 24, 25, 30, 36, 40);
+
+@mixin custom-widths() {
+  @each $width in $custom-widths {
+    .w-#{$width} {
+      width: percentage($width / 100);
+    }
+  }
+}
+
+@include custom-widths();
+
+body {
+  color: $black;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  font-family: 'Inter', sans-serif;
+}
+
+.btn-link, a {
+  &:hover, &:focus {
+    text-decoration: none;
+  }
+}
+
+a {
+  color: $body-color;
+
+  &:hover {
+    color: $main-orange;
+  }
+}
+
+::placeholder {
+  font-size: $font-size-base;
+  opacity: .4;
+}
+
+p, label {
+  margin-bottom: 0;
+}
+
+button:focus,
+button.dropdown-toggle:focus,
+textarea:focus,
+textarea.form-control:focus,
+input.form-control:focus,
+input[type=text]:focus,
+input[type=password]:focus,
+input[type=email]:focus,
+input[type=number]:focus,
+[type=text].form-control:focus,
+[type=password].form-control:focus,
+[type=email].form-control:focus,
+[type=tel].form-control:focus,
+[contenteditable].form-control:focus,
+.page-link:focus {
+  //box-shadow: inset 0 -1px 0 #ddd;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+ngb-pagination.custom .pagination {
+  margin-bottom: 0;
+  .page-item {
+    margin: 0 1px;
+
+    .page-link {
+      background: $form-control-solid-color;
+      border: none;
+      border-radius: $border-radius;
+      color: $black;
+      min-width: 30px;
+      height: $tab-h;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-bold;
+
+      &:hover {
+        background-color: rgba($main-purple, .2);
+      }
+
+      &:not(:last-of-type) {
+        margin-right: 2px;
+      }
+    }
+
+    &.active {
+      .page-link {
+        background: $main-purple;
+        color: $white;
+      }
+    }
+  }
+}
+
+.wide-container {
+  @extend .container-fluid; // which has max-width: auto; (full)
+}
+
+.form-control {
+  padding: $input-padding-y $input-padding-x;
+  height: $input-height;
+  font-size: $font-size-base;
+
+  &--icon {
+    position: absolute;
+    right: .625rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &.form-control-solid {
+    background-color: $form-control-solid-color;
+    border-color: $form-control-solid-color;
+  }
+}
+.form-control-sm {
+  height: calc(1.5em + 0.5rem + 2px);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.custom-control {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.custom-control {
+  &.custom-control--selected {
+    color: $purple;
+  }
+}
+
+.custom-control-input~.custom-control-label {
+  font-weight: $font-weight-bold;
+
+  &::before, &::after {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+.custom-control-input:checked~.custom-control-label::before {
+  color: $white;
+  border: none;
+  background-color: $main-purple;
+}
+
+.custom-control-input:focus~.custom-control-label::before {
+  box-shadow: none;
+}
+
+.custom-badge {
+  background-color: rgba(255, 82, 58, .05);
+}
+
+.btn {
+  padding: $btn-padding-y $btn-padding-x;
+  font-size: $font-size-base;
+  border-radius: $btn-border-radius;
+  white-space: nowrap;
+
+  &.btn-orange {
+    background-color: $main-orange;
+    color: $white;
+  }
+
+  &.btn-orange-text {
+    color: $main-orange;
+  }
+
+  &.btn-light {
+    background-color: $btn-light-bg;
+  }
+
+  &.btn-sm {
+    line-height: 1;
+    font-size: $font-size-sm;
+    padding: $btn-sm-padding-y $btn-sm-padding-x;
+  }
+
+  &.btn--orange-outline {
+    text-transform: uppercase;
+    background-color: $white;
+    color: $main-orange;
+    border: 2px solid $main-orange;
+    font-weight: 700;
+
+    &:hover {
+      background-color: $main-orange;
+      color: $white;
+    }
+  }
+
+  &.btn--sucess-outline {
+    text-transform: uppercase;
+    background-color: $white;
+    color: $main-success;
+    border: 2px solid $main-success;
+    font-weight: 700;
+
+    &:hover {
+      background-color: $main-success;
+      color: $white;
+    }
+  }
+}
+
+.input-group > .form-control:focus {
+  z-index: 0;
+}
+
+.text-purple {
+  color: $main-purple;
+}
+
+.text-orange {
+  color: $main-orange;
+}
+
+.custom-accordion {
+  .card {
+    border: none;
+
+    &-header {
+      padding: 1rem 0;
+      background-color: $white;
+      border: none;
+
+      &.card-header--with-badge {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      button {
+        padding: 0;
+        color: #0F9A68;
+        font-weight: $font-weight-bolder;
+        display: flex;
+        align-items: center;
+
+        img {
+          padding-right: .5rem;
+        }
+      }
+    }
+
+    &-body {
+      padding: 0;
+
+      .custom-control-text {
+        padding-left: .25rem;
+        opacity: .5;
+      }
+    }
+  }
+}
+
+.custom-badge {
+  cursor: pointer;
+  padding: .25rem;
+  border-radius: $border-radius;
+  background-color: rgba($main-orange, .05);
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background-color: rgba($main-orange, .1);
+  }
+
+  &--text {
+    margin-left: .25rem;
+  }
+}
+
+.mb-36 {
+  margin-bottom: 36px;
+}
+
+.custom-tab {
+  min-width: $tab-w;
+  height: $tab-h;
+  border-radius: $border-radius;
+  background-color: $form-control-solid-color;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-sm;
+  cursor: pointer;
+
+  &:not(:last-of-type) {
+    margin-right: 2px;
+  }
+
+  &.active {
+    background: $main-purple;
+    color: $white;
+
+    &:hover {
+      background: $main-purple;
+    }
+  }
+
+  &:hover {
+    background-color: rgba($main-purple, .2);
+  }
+}
+
+.clickable {
+  cursor: pointer;
+  &-badge {
+    border-radius: 4px;
+    border: $border-width solid #DCD7FF;
+    padding: 3px 6px;
+    color: $main-purple;
+    font-size: $font-size-sm;
+    display: flex;
+    align-items: center;
+    margin-bottom: .25rem;
+    margin-right: .25rem;
+  }
+}
+
+.custom-scroll {
+  &::-webkit-scrollbar-track {
+    border-radius: $border-radius;
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: $border-radius;
+    background-color: #c1c6c9;
+  }
+}
+
+// on medium screens and beyond...
+@include media-breakpoint-up(md) {
+  .wide-container {
+    max-width: 1600px; // limit the width here!
+  }
+}
+
+@media (min-width: 576px) {
+  .container-xl, .container-lg, .container-md, .container-sm, .container {
+    max-width: 95%;
+  }
+}
+
+/* in-flight clone */
+.gu-mirror {
+  position: fixed !important;
+  margin: 0 !important;
+  z-index: 9999 !important;
+  opacity: 0.8;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+  filter: alpha(opacity=80);
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.6);
+}
+/* high-performance display:none; helper */
+.gu-hide {
+  left: -9999px !important;
+}
+/* added to mirrorContainer (default = body) while dragging */
+.gu-unselectable {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+/* added to the source element while its mirror is dragged */
+.gu-transit {
+  opacity: 0.2;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+  filter: alpha(opacity=20);
+}

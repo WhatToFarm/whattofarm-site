@@ -1,0 +1,136 @@
+<form class="form" [formGroup]="createMonitorForm" (ngSubmit)="createMonitor()">
+  <div class="row m-0">
+    <div class="form-group col-md col-6">
+      <input class="form-control" placeholder="Адрес нашего кошелка" formControlName="monitoring_address" type="text" id="monitoring_address">
+    </div>
+    <div class="form-group col-md col-6">
+      <input class="form-control" placeholder="Контракт LP токена пула(что за пул)" formControlName="pool_contract_address" type="text" id="pool_contract_address">
+    </div>
+    <div class="form-group col-md col-6">
+      <input class="form-control" placeholder="Контракт фарма (автофарма)" formControlName="farm_address" type="text" id="farm_address">
+    </div>
+    <div class="form-group col-md col-6">
+      <button type="submit" class="btn btn-primary" [disabled]="!createMonitorForm.valid || createMonitorForm.pristine">
+        Добавить
+      </button>
+    </div>
+  </div>
+</form>
+
+<form class="form-horizontal" [formGroup]="monitorForm" *ngIf="!loading">
+  <div formArrayName="monitors">
+    <div *ngFor="let monitor of monitorsArray.controls; let i = index;">
+      <div class="table-responsive" [formGroupName]="i">
+        <div class="row m-0 form-horizontal--detail">
+          <div class="form-group">
+            {{ i + 1 }}.
+          </div>
+          <div class="form-group col">
+            <input class="form-control" placeholder="Адрес нашего кошелка"
+                   formControlName="monitoring_address" type="text"
+                   id="monitoring_address_value" readonly="readonly">
+          </div>
+          <div class="form-group col">
+            <input class="form-control" placeholder="Контракт LP токена пула(что за пул)"
+                   formControlName="pool_contract_address" type="text"
+                   id="pool_contract_address_value" readonly="readonly">
+          </div>
+          <div class="form-group col">
+            <input class="form-control" placeholder="Контракт фарма (автофарма)"
+                   formControlName="farm_address" type="text"
+                   id="farm_address_value" readonly="readonly">
+          </div>
+          <div class="form-group col">
+            <input class="form-control" placeholder="Token 1 name"
+                   formControlName="token_1_name" type="text"
+                   id="token_1_value" readonly="readonly">
+          </div>
+          <div class="form-group col">
+            <input class="form-control" placeholder="Token 2 name"
+                   formControlName="token_2_name" type="text"
+                   id="token_2_value" readonly="readonly">
+          </div>
+          <div class="form-group col">
+            <button type="button" class="btn btn-danger" (click)="removeMonitor(monitor)">
+              Удалить
+            </button>
+          </div>
+        </div>
+        <table class="table table-bordered table-striped table-highlight">
+          <thead>
+            <tr>
+              <th>Тип Транзакции</th>
+              <th>Дата</th>
+              <th>Время</th>
+              <th>Количество LP</th>
+              <th>Доход в LP</th>
+              <th>Ссылка</th>
+              <th>Токен 1</th>
+              <th>Токен 2</th>
+              <th>Цена Токен 1</th>
+              <th>Цена Токен 2</th>
+              <th>Котлета</th>
+              <th>Цена 1 LP</th>
+              <th>Доход 1 LP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-nowrap">Сформирована ликвидность, получен LP</td>
+              <td><input class="form-control" placeholder="гггг.мм.дд" formControlName="received_date" type="text" id="received_date"></td>
+              <td><input class="form-control" placeholder="чч:мм" formControlName="received_time" type="text" id="received_time"></td>
+              <td><input class="form-control" formControlName="received_total" type="text" id="received_total"></td>
+              <td>{{ getFormValue(monitor, 'received_income') }}</td>
+              <td><input class="form-control" formControlName="received_link" type="text" id="received_link"></td>
+              <td>{{ getFormValue(monitor, 'token_1_count') }}</td>
+              <td>{{ getFormValue(monitor, 'token_2_count') }}</td>
+              <td>{{ getFormValue(monitor, 'token_1_cost') }}</td>
+              <td>{{ getFormValue(monitor, 'token_2_cost') }}</td>
+              <td>{{ getFormValue(monitor, 'received_cutlet') }}</td>
+              <td>{{ getFormValue(monitor, 'received_cost') }}</td>
+              <td>{{ getFormValue(monitor, 'received_income') }}</td>
+            </tr>
+            <tr>
+              <td class="text-nowrap">LP отправлены в фарм сервис</td>
+              <td><input class="form-control" placeholder="гггг.мм.дд" formControlName="sent_date" type="text" id="sent_date"></td>
+              <td><input class="form-control" placeholder="чч:мм" formControlName="sent_time" type="text" id="sent_time"></td>
+              <td><input class="form-control" formControlName="sent_total" type="text" id="sent_total"></td>
+              <td>{{ getFormValue(monitor, 'sent_income') }}</td>
+              <td><input class="form-control" formControlName="sent_link" type="text" id="sent_link"></td>
+              <td>{{ getFormValue(monitor, 'token_1_count') }}</td>
+              <td>{{ getFormValue(monitor, 'token_2_count') }}</td>
+              <td>{{ getFormValue(monitor, 'token_1_cost') }}</td>
+              <td>{{ getFormValue(monitor, 'token_2_cost') }}</td>
+              <td>{{ getFormValue(monitor, 'sent_cutlet') }}</td>
+              <td>{{ getFormValue(monitor, 'sent_cost') }}</td>
+              <td>{{ getFormValue(monitor, 'sent_income') }}</td>
+            </tr>
+            <tr>
+              <td class="text-nowrap">Сейчас</td>
+              <td><input class="form-control" placeholder="гггг.мм.дд" formControlName="now_date" type="text" id="now_date"></td>
+              <td><input class="form-control" placeholder="чч:мм" formControlName="now_time" type="text" id="now_time"></td>
+              <td><input class="form-control" formControlName="now_total" type="text" id="now_total"></td>
+              <td colspan="6"></td>
+              <td>{{ getFormValue(monitor, 'now_cutlet') }}</td>
+              <td>{{ getFormValue(monitor, 'now_cost') }}</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="row m-0">
+          <div class="form-group col p-0">
+            <div class="alert alert-danger" *ngIf="getErrorMessage(monitor)">{{ getErrorMessage(monitor) }}</div>
+            <button type="button" class="btn btn-success pl-4 pr-4" (click)="updateMonitor(monitor)" [disabled]="!monitor.valid || monitor.pristine">
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="d-flex justify-content-center" *ngIf="loading">
+  <div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>

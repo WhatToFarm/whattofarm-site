@@ -1,0 +1,44 @@
+<div class="container m-0 pt-3">
+  <div class="row">
+    <div class="col-md-auto m-auto pagination--block">
+      <ngb-pagination class="custom" [maxSize]="6" [collectionSize]="pagination.total || 0" [pageSize]="pagination.size"
+                      [(page)]="pagination.page" (pageChange)="onPageChange()" [directionLinks]="true">
+      </ngb-pagination>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <h4>Пользователи</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <table class="table" *ngIf="true">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Token</th>
+            <th>Admin</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users; let i = index">
+            <td>{{ i + 1}}</td>
+            <td>---</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.token }}</td>
+            <td>{{ user.isAdmin ? 'Да' : 'Нет' }}</td>
+            <td>
+              <button type="button" class="btn btn-sm btn--orange-outline" (click)="deleteUser(user.username)">Удалить</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

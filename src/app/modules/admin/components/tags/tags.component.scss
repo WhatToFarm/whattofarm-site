@@ -1,0 +1,65 @@
+.dragula {
+  margin: 10px 10px 0 0;
+  background: darkslategrey;
+  padding: 8px;
+
+  .container {
+    flex: 1;
+
+    .tags {
+      background: rgba(255, 255, 255, 0.9);
+      list-style: none;
+      padding: 8px;
+      color: #222;
+
+      .handle {
+        cursor: move;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        border-right: 2px solid #222;
+      }
+      &--description {
+        width: 100%;
+        padding-left: 30px;
+      }
+    }
+
+    .tags:not(:last-child) {
+      border-bottom: 1px solid #777;
+    }
+  }
+
+  .container:not(:last-child) {
+    margin-right: 8px;
+  }
+}
+@media (max-width: 670px) {
+  .dragula {
+    margin: 3px 3px 0 0;
+    display: grid !important;
+    .tagname {
+      display: block !important;
+      label {
+        justify-content: start;
+      }
+    }
+    &--main {
+      display: grid !important;
+      .form-inline {
+        //display: block !important;
+        .form-group {
+          display: flex;
+          margin-bottom: 0;
+          .form-control {
+            height: auto;
+            margin: auto 0;
+            width: auto;
+          }
+        }
+      }
+      input.form-control {
+        width: 100%;
+      }
+    }
+  }
+}

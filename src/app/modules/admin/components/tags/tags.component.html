@@ -1,0 +1,162 @@
+<div class="dragula">
+  <div class="row">
+    <div class="col">
+      <h4>Добавить тег</h4>
+    </div>
+  </div>
+  <div class="row form-inline">
+    <div class="col-md-auto">
+      <div class="form-group mb-2 tagname">
+        <label for="tag_name" class="col-form-label pr-2">Название тега</label>
+        <input type="text" class="form-control" id="tag_name" placeholder="Введите название" [(ngModel)]="newTagName">
+      </div>
+    </div>
+    <div class="col">
+      <button type="submit" class="btn btn--orange-outline mb-2" [disabled]="!newTagName" (click)="addTag()">Добавить</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <h4>Все теги</h4>
+    </div>
+  </div>
+  <div class="d-flex dragula--main">
+    <label for="left">Активные теги</label>
+    <div class="container" dragula="TAGS" id="left" [(dragulaModel)]="activeTags">
+      <div class="tags d-flex" *ngFor="let tag of activeTags; let i=index">
+        <span class="handle">...</span>
+        <div class="w-100">
+          <div class="tags--description">
+            <div class="row form-inline">
+              <div class="col" *ngIf="!grupNamesOptions[tag.id]?.editingName">
+                {{ tag.name }}
+                <button class="btn" type="button" (click)="editTagName(tag.id)">
+                  <fa-icon [icon]="['fas', 'edit']" [fixedWidth]="false"></fa-icon>
+                </button>
+              </div>
+              <div class="col" *ngIf="grupNamesOptions[tag.id]?.editingName">
+                <div class="input-group input-group-sm">
+                  <input [id]="'tag'+tag.id" type="text" class="form-control" #tagName [value]="tag.name"  (keydown.enter)="updateTagName(tag, tagName.value)">
+                  <div class="input-group-append">
+                    <button class="btn btn-success" type="button" (click)="updateTagName(tag, tagName.value)">
+                      ОК
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-group justify-content-end">
+                  <label [for]="'is_featured' + tag.name" class="col-form-label pr-2">Featured</label>
+                  <input type="checkbox" class="form-control" [id]="'is_featured' + tag.name" [checked]="tag.isFeatured" (change)="updateIsFeatured(tag)">
+                </div>
+              </div>
+            </div>
+            <div class="row form-inline">
+              <div class="col">
+                <div ngbDropdown *ngIf="!grupNamesOptions[tag.id]?.editingMode">
+                  <button type="button" class="btn btn-outline-secondary" id="GroupDropdown" ngbDropdownToggle
+                          >{{ tag.groupName !== '-1' ? tag.groupName : 'No Group' }}</button>
+                  <div ngbDropdownMenu aria-labelledby="dropdownAction">
+                    <button type="button" ngbDropdownItem (click)="editGroupName(tag.id)" tabindex="-1">Add group...</button>
+                    <div class="dropdown-divider"></div>
+                    <div class="d-flex flex-row" ngbDropdownItem *ngFor="let groupName of groupNames">
+                      <button class="flex-grow-1 btn text-left ml-0 pl-0" type="button" ngbDropdownItem
+                              (click)="selectTagGroup(tag, groupName)" tabindex="-1">{{ groupName !== '-1' ? groupName : 'No Group' }}</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="input-group input-group-sm" *ngIf="grupNamesOptions[tag.id]?.editingMode">
+                  <input type="text" class="form-control form-control-sm" placeholder="Название" #groupName
+                         (keydown.esc)="editGroupName(tag.id)"
+                         (keydown.enter)="saveGroupName(groupName.value, tag)">
+                  <div class="input-group-append">
+                    <button type="button" class="btn btn--orange-outline" (click)="editGroupName(tag.id)">Отмена</button>
+                    <button type="button" class="btn btn--sucess-outline"
+                            (click)="saveGroupName(groupName.value, tag)">ОК</button>
+                  </div>
+                </div>
+                <!--              <button type="button" class="btn btn-sm btn-link text-muted" (click)="removeTag(tag.name)">-->
+                <!--                <fa-icon [icon]="['fas', 'trash-alt']" [fixedWidth]="true"></fa-icon>-->
+                <!--              </button>-->
+              </div>
+              <div class="col">
+                <div class="form-group justify-content-end">
+                  <label [for]="'is_active' + tag.name" class="col-form-label pr-2">Visible</label>
+                  <input type="checkbox" class="form-control" [id]="'is_active' + tag.name" [checked]="tag.active" (change)="updateActive(tag, i)">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <label for="right">Не активные теги</label>
+    <div class="container" dragula="TAGS" id="right" [(dragulaModel)]="inActiveTags">
+      <div class="tags d-flex" *ngFor="let tag of inActiveTags; let i=index">
+        <span class="handle">...</span>
+        <div class="w-100">
+          <div class="tags--description">
+          <div class="row form-inline">
+
+            <div class="col" *ngIf="!grupNamesOptions[tag.id]?.editingName">
+              {{ tag.name }}
+              <button class="btn" type="button" (click)="editTagName(tag.id)">
+                <fa-icon [icon]="['fas', 'edit']" [fixedWidth]="false"></fa-icon>
+              </button>
+            </div>
+            <div class="col" *ngIf="grupNamesOptions[tag.id]?.editingName">
+              <div class="input-group input-group-sm">
+                <input [id]="'tag'+tag.id" type="text" class="form-control" #tagName [value]="tag.name"  (keydown.enter)="updateTagName(tag, tagName.value)">
+                <div class="input-group-append">
+                  <button class="btn btn-success" type="button" (click)="updateTagName(tag, tagName.value)">
+                    ОК
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group justify-content-end">
+                <label [for]="'is_featured' + tag.name" class="col-form-label pr-2">Featured</label>
+                <input type="checkbox" class="form-control" [id]="'is_featured' + tag.name" [checked]="tag.isFeatured" (change)="updateIsFeatured(tag)">
+              </div>
+            </div>
+          </div>
+          <div class="row form-inline">
+            <div class="col">
+              <div ngbDropdown *ngIf="!grupNamesOptions[tag.id]?.editingMode">
+                <button type="button" class="btn btn-outline-secondary" id="groupDropdownHide" ngbDropdownToggle
+                        >{{ tag.groupName !== '-1' ? tag.groupName : 'No Group' }}</button>
+                <div ngbDropdownMenu aria-labelledby="dropdownAction">
+                  <button type="button" ngbDropdownItem (click)="editGroupName(tag.id)" tabindex="-1">Add group...</button>
+                  <div class="dropdown-divider"></div>
+                  <div class="d-flex flex-row" ngbDropdownItem *ngFor="let groupName of groupNames">
+                    <button class="flex-grow-1 btn text-left ml-0 pl-0" type="button" ngbDropdownItem
+                            (click)="selectTagGroup(tag, groupName)" tabindex="-1">{{ groupName !== '-1' ? groupName : 'No Group' }}</button>
+                  </div>
+                </div>
+              </div>
+              <div class="input-group input-group-sm" *ngIf="grupNamesOptions[tag.id]?.editingMode">
+                <input type="text" class="form-control form-control-sm" placeholder="Название" #groupName
+                       (keydown.esc)="editGroupName(tag.id)"
+                       (keydown.enter)="saveGroupName(groupName.value, tag)">
+                <div class="input-group-append">
+                  <button type="button" class="btn btn--orange-outline" (click)="editGroupName(tag.id)">Отмена</button>
+                  <button type="button" class="btn btn--sucess-outline"
+                          (click)="saveGroupName(groupName.value, tag)">ОК</button>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group justify-content-end">
+                <label [for]="'is_active' + tag.name" class="col-form-label pr-2">Visible</label>
+                <input type="checkbox" class="form-control" [id]="'is_active' + tag.name" [checked]="tag.active" (change)="updateActive(tag, i)">
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

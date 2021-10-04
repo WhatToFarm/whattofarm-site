@@ -1,0 +1,353 @@
+<!--<main class="wide-container">-->
+<!--  <div class="row py-4">-->
+<!--    <div class="col">-->
+<!--      <span *ngIf="getPriceUsd('BNB') > 0">-->
+<!--        <strong>1</strong>&nbsp;BNB = <strong [class.text-success]="getPriceDiffUsd('BNB') > 0"-->
+<!--          [class.text-danger]="getPriceDiffUsd('BNB') < 0">{{ getPriceUsd('BNB') }}</strong>&nbsp;USDT-->
+<!--      </span>-->
+<!--      <span *ngIf="getPriceUsd('ETH') > 0">-->
+<!--        <span class="mx-3 text-muted">|</span>-->
+<!--        <strong>1</strong>&nbsp;ETH = <strong [class.text-success]="getPriceDiffUsd('ETH') > 0"-->
+<!--          [class.text-danger]="getPriceDiffUsd('ETH') < 0">{{ getPriceUsd('ETH') }}</strong>&nbsp;USDT-->
+<!--      </span>-->
+<!--      <span *ngIf="getPriceUsd('MATIC') > 0">-->
+<!--        <span class="mx-3 text-muted">|</span>-->
+<!--        <strong>1</strong>&nbsp;MATIC = <strong [class.text-success]="getPriceDiffUsd('MATIC') > 0"-->
+<!--          [class.text-danger]="getPriceDiffUsd('MATIC') < 0">{{ getPriceUsd('MATIC') }}</strong>&nbsp;USDT-->
+<!--      </span>-->
+<!--    </div>-->
+<!--    <div class="col">-->
+<!--      <div class="text-right">-->
+<!--        <span *ngIf="currentBlockBsc > 0">-->
+<!--          <span class="mr-3"><strong>BSC</strong></span>-->
+<!--          <span *ngIf="currentBlockBsc">Block: <strong>{{ currentBlockBsc }}</strong></span>-->
+<!--          <span class="mx-3 text-muted">|</span>-->
+<!--        </span>-->
+<!--        <span *ngIf="currentBlockEth > 0">-->
+<!--          <span class="mr-3"><strong>ETH</strong></span>-->
+<!--          <span *ngIf="currentBlockBsc">Block: <strong>{{ currentBlockEth }}</strong></span>-->
+<!--          <span class="mx-3 text-muted">|</span>-->
+<!--        </span>-->
+<!--        <span *ngIf="currentBlockMatic > 0">-->
+<!--          <span class="mr-3"><strong>MATIC</strong></span>-->
+<!--          <span *ngIf="currentBlockBsc">Block: <strong>{{ currentBlockMatic }}</strong></span>-->
+<!--          <span class="mx-3 text-muted">|</span>-->
+<!--        </span>-->
+<!--        <span>Connection: {{ (wsService.status | async) ? "🟢" : "🔴" }}</span>-->
+<!--        <span class="ml-3 text-muted">|</span>-->
+<!--        <button type="button" class="btn btn-sm btn-link text-muted" (click)="login()" *ngIf="!authToken">-->
+<!--          <fa-icon [icon]="['fas', 'sign-in-alt']" [fixedWidth]="true"></fa-icon>-->
+<!--        </button>-->
+<!--        <button type="button" class="btn btn-sm btn-link text-muted" (click)="logout()" *ngIf="authToken">-->
+<!--          <fa-icon [icon]="['fas', 'sign-out-alt']" [fixedWidth]="true"></fa-icon>&nbsp;Log Out-->
+<!--        </button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <div class="row">-->
+<!--    <div class="col-3">-->
+<!--      <div class="logo pb-4">-->
+<!--        <img src="/assets/img/logo.png" alt="">-->
+<!--      </div>-->
+<!--      <h3 class="text-muted mt-2">Sort By</h3>-->
+<!--      <ul class="sidebar">-->
+<!--        <li>-->
+<!--          <a routerLink="." [class.active]="sortField === 'liquidity'" [queryParams]="{ sortField: 'liquidity', sortDirection: sortField !== 'liquidity' ? undefined : sortDirection === 'asc' ? 'desc' : 'asc' }">-->
+<!--          Liquidity<fa-icon class="ml-1" [icon]="['fas', sortDirection === 'asc' ? 'sort-amount-down-alt' : 'sort-amount-down']" [fixedWidth]="true" *ngIf="sortField === 'liquidity'"></fa-icon></a>-->
+<!--        </li>-->
+<!--        <li>-->
+<!--          <a routerLink="." [class.active]="sortField === 'txs'" [queryParams]="{ sortField: 'txs', sortDirection: sortField !== 'txs' ? undefined : sortDirection === 'asc' ? 'desc' : 'asc' }" queryParamsHandling="merge">-->
+<!--          Transactions<fa-icon class="ml-1" [icon]="['fas', sortDirection === 'asc' ? 'sort-amount-down-alt' : 'sort-amount-down']" [fixedWidth]="true" *ngIf="sortField === 'txs'"></fa-icon></a>-->
+<!--          <ul class="pb-0 mb-0">-->
+<!--            <li class="cursor-pointer"><a [class.active]="period === ''" (click)="period = ''">All</a></li>-->
+<!--            <li class="cursor-pointer"><a [class.active]="period === 'm5'" (click)="period = 'm5'">5 min</a></li>-->
+<!--            <li class="cursor-pointer"><a [class.active]="period === 'm30'" (click)="period = 'm30'">30 min</a></li>-->
+<!--            <li class="cursor-pointer"><a [class.active]="period === 'h1'" (click)="period = 'h1'">1 hr</a></li>-->
+<!--            <li class="cursor-pointer pb-0 mb-0"><a [class.active]="period === 'h1'" (click)="period = 'h24'">24 hrs</a></li>-->
+<!--          </ul>-->
+<!--        </li>-->
+<!--      </ul>-->
+<!--      <h3 class="text-muted mt-2">Networks</h3>-->
+<!--      <ul class="sidebar">-->
+<!--        <li>-->
+<!--          <a routerLink="."-->
+<!--          [class.active]="!network"-->
+<!--          [queryParams]="{ network: undefined }"-->
+<!--          queryParamsHandling="merge">-->
+<!--          All</a>-->
+<!--        </li>-->
+<!--        <li *ngFor="let networkInfo of networks">-->
+<!--          <a routerLink="."-->
+<!--          [class.active]="network === networkInfo.name"-->
+<!--          [queryParams]="{ network: networkInfo.name || undefined }"-->
+<!--          queryParamsHandling="merge">-->
+<!--          {{ networkInfo.name | uppercase }}</a>-->
+<!--        </li>-->
+<!--      </ul>-->
+<!--      <h3 class="text-muted mt-2">Tags<button type="button" class="btn btn-sm btn-outline-secondary float-right" (click)="addPairList()" title="Add list...">-->
+<!--        <fa-icon [icon]="['fas', 'plus']" [fixedWidth]="true"></fa-icon></button>-->
+<!--      </h3>-->
+<!--      <ul class="sidebar">-->
+<!--        <li *ngFor="let pairListInfo of pairLists">-->
+<!--          <a routerLink="."-->
+<!--          [class.active]="activePairListId === pairListInfo.id"-->
+<!--          [class.featured]="pairListInfo.isFeatured"-->
+<!--          [queryParams]="{ list: pairListInfo.id || undefined }"-->
+<!--          queryParamsHandling="merge">-->
+<!--          <fa-icon class="mr-2" [icon]="['far', 'star']" [fixedWidth]="false" *ngIf="pairListInfo.isFeatured"></fa-icon>{{ pairListInfo.name }}</a>-->
+<!--          <span class="badge badge-pill badge-secondary ml-3">{{ pairListInfo.pairCount }}</span>-->
+<!--          <span class="close-button">-->
+<!--            <button type="button" class="btn btn-sm btn-link" (click)="removePairList(pairListInfo.id)"-->
+<!--            *ngIf="pairListInfo.id && pairListInfo.id.length > 10 && (authToken || !pairListInfo.isSystem)">-->
+<!--              <fa-icon [icon]="['fas', 'times']"></fa-icon>-->
+<!--            </button>-->
+<!--          </span>-->
+<!--        </li>-->
+<!--      </ul>-->
+<!--      <div *ngIf="listsChanged && authToken">-->
+<!--        <button type="button" class="btn btn-block btn-sm btn-primary mt-3" (click)="uploadPairLists()" *ngIf="authToken">-->
+<!--          <fa-icon [icon]="['fas', 'save']" [fixedWidth]="true"></fa-icon>&nbsp;Save List-->
+<!--        </button>-->
+<!--      </div>-->
+<!--      <hr>-->
+<!--      <app-promo-place place="side" count="5"></app-promo-place>-->
+<!--    </div>-->
+<!--    <div class="col-9">-->
+<!--      <div class="input-group mt-1 mb-4">-->
+<!--        <input type="text" class="form-control" placeholder="Ticker..." aria-label="Ticker..."-->
+<!--          aria-describedby="button-addon2" (keydown.enter)="search(searchQuery.value)" #searchQuery>-->
+<!--        <div class="input-group-append">-->
+<!--          <button class="btn btn-secondary" type="button" id="button-addon2" (click)="search(searchQuery.value)">-->
+<!--            <fa-icon [icon]="['fas', 'search']" [fixedWidth]="true"></fa-icon>-->
+<!--          </button>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <app-promo-place place="front" count="5"></app-promo-place>-->
+<!--      <div>-->
+<!--        <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="period" *ngIf="sortField === 'txs'">-->
+<!--          <label ngbButtonLabel class="btn-outline-primary">-->
+<!--            <input ngbButton type="radio" value="">All-->
+<!--          </label>-->
+<!--          <label ngbButtonLabel class="btn-outline-primary">-->
+<!--            <input ngbButton type="radio" value="m5">5m-->
+<!--          </label>-->
+<!--          &lt;!&ndash; <label ngbButtonLabel class="btn-outline-primary">-->
+<!--            <input ngbButton type="radio" value="m15">15m-->
+<!--          </label> &ndash;&gt;-->
+<!--          <label ngbButtonLabel class="btn-outline-primary">-->
+<!--            <input ngbButton type="radio" value="m30">30m-->
+<!--          </label>-->
+<!--          <label ngbButtonLabel class="btn-outline-primary">-->
+<!--            <input ngbButton type="radio" value="h1">1h-->
+<!--          </label>-->
+<!--          &lt;!&ndash; <label ngbButtonLabel class="btn-outline-primary">-->
+<!--            <input ngbButton type="radio" value="h4">4h-->
+<!--          </label>-->
+<!--          <label ngbButtonLabel class="btn-outline-primary">-->
+<!--            <input ngbButton type="radio" value="h12">12h-->
+<!--          </label> &ndash;&gt;-->
+<!--          <label ngbButtonLabel class="btn-outline-primary">-->
+<!--            <input ngbButton type="radio" value="h24">1d-->
+<!--          </label>-->
+<!--        </div>-->
+<!--        <span class="float-right ml-3">-->
+<!--          <ngb-pagination [maxSize]="15" [collectionSize]="pagination.total || 0" [pageSize]="pagination.size"-->
+<!--            [(page)]="pagination.page" (pageChange)="onPageChange()" [directionLinks]="true">-->
+<!--          </ngb-pagination>-->
+<!--        </span>-->
+<!--      </div>-->
+<!--      <table class="table mt-3">-->
+<!--        <thead>-->
+<!--          <tr>-->
+<!--            <th scope="col" style="width: 5%"></th>-->
+<!--            <th scope="col">Pair</th>-->
+<!--            <th scope="col" class="text-right" style="width: 5%">-->
+<!--              <a routerLink="." [class.active]="sortField === 'txs'" [queryParams]="{ sortField: 'txs', sortDirection: sortField !== 'txs' ? undefined : sortDirection === 'asc' ? 'desc' : 'asc' }" queryParamsHandling="merge">-->
+<!--                TXs<fa-icon class="ml-1" [icon]="['fas', sortDirection === 'asc' ? 'sort-amount-down-alt' : 'sort-amount-down']" [fixedWidth]="true" *ngIf="sortField === 'txs'"></fa-icon>-->
+<!--              </a>-->
+<!--            </th>-->
+<!--            <th scope="col" class="text-right" style="width: 5%">Price</th>-->
+<!--            <th scope="col" class="text-right" style="width: 5%">-->
+<!--              <a routerLink="." [class.active]="sortField === 'liquidity'" [queryParams]="{ sortField: 'liquidity', sortDirection: sortField !== 'liquidity' ? undefined : sortDirection === 'asc' ? 'desc' : 'asc' }" queryParamsHandling="merge">-->
+<!--                Liquidity<fa-icon class="ml-1" [icon]="['fas', sortDirection === 'asc' ? 'sort-amount-down-alt' : 'sort-amount-down']" [fixedWidth]="true" *ngIf="sortField === 'liquidity'"></fa-icon>-->
+<!--              </a>-->
+<!--            </th>-->
+<!--            <th scope="col" style="width: 5%">Pool</th>-->
+<!--            <th scope="col" style="width: 5%">Net</th>-->
+<!--          </tr>-->
+<!--        </thead>-->
+<!--        <tbody *ngFor="let pairStat of pairs; let pairStatIndex = index">-->
+<!--          <tr>-->
+<!--            <th scope="row">{{ (pairStatIndex + 1) + pagination.size * (pagination.page - 1) }}</th>-->
+<!--            <td><a [href]="getScanLink(pairStat)" target="_blank"><strong>{{ pairStat.pairInfo.ticker }}</strong></a>-->
+<!--              <div>-->
+<!--                <span *ngFor="let pairListInfo of pairLists">-->
+<!--                  <button type="button" class="btn btn-sm btn-outline-primary px-1 py-0 mt-1 mr-1" (click)="toggleFavorite(pairListInfo.id, pairStat)"-->
+<!--                    *ngIf="pairListInfo.id && pairListInfo.id.length > 10 && (isFavorite(pairListInfo.id, pairStat) || (!authToken && !pairListInfo.isSystem))"-->
+<!--                    [disabled]="!authToken && pairListInfo.isSystem">-->
+<!--                    {{ pairListInfo.name }}&nbsp;<fa-icon [icon]="[isFavorite(pairListInfo.id, pairStat) ? 'fas' : 'far', 'heart']"></fa-icon>-->
+<!--                  </button>-->
+<!--                </span>  -->
+<!--              </div>-->
+<!--              <div>-->
+<!--                <ul class="links">-->
+<!--                  <li *ngFor="let link of pairStat.links">-->
+<!--                    <a class="small" [href]="link.href" target="_blank"><fa-icon class="mr-1" [icon]="link.faIcon" [fixedWidth]="true"></fa-icon>{{ link.title }}</a>-->
+<!--                  </li>-->
+<!--                </ul>-->
+<!--                <div *ngIf="authToken">-->
+<!--                  <ng-template #linkEditor let-modal>-->
+<!--                    <div class="modal-header">-->
+<!--                      <h4 class="modal-title" id="modal-basic-title">Links</h4>-->
+<!--                      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cancel')">-->
+<!--                        <span aria-hidden="true">&times;</span>-->
+<!--                      </button>-->
+<!--                    </div>-->
+<!--                    <div class="modal-body">-->
+<!--                      <form>-->
+<!--                        <div class="form-group">-->
+<!--                          <label for="webLink">{{ links[0].title }}</label>-->
+<!--                          <div class="input-group">-->
+<!--                            <div class="input-group-prepend">-->
+<!--                              <span class="input-group-text" id="basic-addon1"><fa-icon [icon]="links[0].faIcon"></fa-icon></span>-->
+<!--                            </div>-->
+<!--                            <input id="webLink" class="form-control" placeholder="https://example.com" name="webLink" [(ngModel)]="links[0].href" (keyup.enter)="modal.close('OK')">-->
+<!--                            <div class="input-group-append" *ngIf="links[0].href">-->
+<!--                              <button type="button" class="btn btn-outline-secondary" (click)="links[0].href = ''">-->
+<!--                                <fa-icon [icon]="['fas', 'times']"></fa-icon>-->
+<!--                              </button>-->
+<!--                            </div>-->
+<!--                          </div>-->
+<!--                        </div>-->
+<!--                        <div class="form-group">-->
+<!--                          <label for="twitterLink">{{ links[1].title }}</label>-->
+<!--                          <div class="input-group">-->
+<!--                            <div class="input-group-prepend">-->
+<!--                              <span class="input-group-text" id="basic-addon1"><fa-icon [icon]="links[1].faIcon" [fixedWidth]="true"></fa-icon></span>-->
+<!--                            </div>-->
+<!--                            <input id="webLink" class="form-control" placeholder="https://twitter.com/username" name="twitter" [(ngModel)]="links[1].href" (keyup.enter)="modal.close('OK')">-->
+<!--                            <div class="input-group-append" *ngIf="links[1].href">-->
+<!--                              <button type="button" class="btn btn-outline-secondary" (click)="links[1].href = ''">-->
+<!--                                <fa-icon [icon]="['fas', 'times']"></fa-icon>-->
+<!--                              </button>-->
+<!--                            </div>-->
+<!--                          </div>-->
+<!--                        </div>-->
+<!--                        <div class="form-group">-->
+<!--                          <label for="twitterLink">{{ links[2].title }}</label>-->
+<!--                          <div class="input-group">-->
+<!--                            <div class="input-group-prepend">-->
+<!--                              <span class="input-group-text" id="basic-addon1"><fa-icon [icon]="links[2].faIcon" [fixedWidth]="true"></fa-icon></span>-->
+<!--                            </div>-->
+<!--                            <input id="coingeckoLink" class="form-control" placeholder="https://coingecko.com" name="coingecko" [(ngModel)]="links[2].href" (keyup.enter)="modal.close('OK')">-->
+<!--                            <div class="input-group-append" *ngIf="links[2].href">-->
+<!--                              <button type="button" class="btn btn-outline-secondary" (click)="links[2].href = ''">-->
+<!--                                <fa-icon [icon]="['fas', 'times']"></fa-icon>-->
+<!--                              </button>-->
+<!--                            </div>-->
+<!--                          </div>-->
+<!--                        </div>-->
+<!--                        <div class="form-group">-->
+<!--                          <label for="feeLink">{{ links[3].title }}</label>-->
+<!--                          <div class="input-group">-->
+<!--                            <div class="input-group-prepend">-->
+<!--                              <span class="input-group-text" id="basic-addon1"><fa-icon [icon]="links[3].faIcon" [fixedWidth]="true"></fa-icon></span>-->
+<!--                            </div>-->
+<!--                            <input id="webLink" class="form-control" placeholder="https://example.com" name="fee" [(ngModel)]="links[3].href" (keyup.enter)="modal.close('OK')">-->
+<!--                            <div class="input-group-append" *ngIf="links[3].href">-->
+<!--                              <button type="button" class="btn btn-outline-secondary" (click)="links[3].href = ''">-->
+<!--                                <fa-icon [icon]="['fas', 'times']"></fa-icon>-->
+<!--                              </button>-->
+<!--                            </div>-->
+<!--                          </div>-->
+<!--                        </div>-->
+<!--                        <div class="form-group">-->
+<!--                          <label for="snapshotLink">{{ links[4].title }}</label>-->
+<!--                          <div class="input-group">-->
+<!--                            <div class="input-group-prepend">-->
+<!--                              <span class="input-group-text" id="basic-addon1"><fa-icon [icon]="links[4].faIcon" [fixedWidth]="true"></fa-icon></span>-->
+<!--                            </div>-->
+<!--                            <input id="webLink" class="form-control" placeholder="https://example.com" name="snapshot" [(ngModel)]="links[4].href" (keyup.enter)="modal.close('OK')">-->
+<!--                            <div class="input-group-append" *ngIf="links[4].href">-->
+<!--                              <button type="button" class="btn btn-outline-secondary" (click)="links[4].href = ''">-->
+<!--                                <fa-icon [icon]="['fas', 'times']"></fa-icon>-->
+<!--                              </button>-->
+<!--                            </div>-->
+<!--                          </div>-->
+<!--                        </div>-->
+<!--                        <div class="form-group">-->
+<!--                          <label for="chart1Link">{{ links[5].title }}</label>-->
+<!--                          <div class="input-group">-->
+<!--                            <div class="input-group-prepend">-->
+<!--                              <span class="input-group-text" id="basic-addon1"><fa-icon [icon]="links[5].faIcon" [fixedWidth]="true"></fa-icon></span>-->
+<!--                            </div>-->
+<!--                            <input id="webLink" class="form-control" placeholder="https://example.com" name="chart1" [(ngModel)]="links[5].href" (keyup.enter)="modal.close('OK')">-->
+<!--                            <div class="input-group-append" *ngIf="links[5].href">-->
+<!--                              <button type="button" class="btn btn-outline-secondary" (click)="links[5].href = ''">-->
+<!--                                <fa-icon [icon]="['fas', 'times']"></fa-icon>-->
+<!--                              </button>-->
+<!--                            </div>-->
+<!--                          </div>-->
+<!--                        </div>-->
+<!--                        <div class="form-group">-->
+<!--                          <label for="chart2Link">{{ links[6].title }}</label>-->
+<!--                          <div class="input-group">-->
+<!--                            <div class="input-group-prepend">-->
+<!--                              <span class="input-group-text" id="basic-addon1"><fa-icon [icon]="links[6].faIcon" [fixedWidth]="true"></fa-icon></span>-->
+<!--                            </div>-->
+<!--                            <input id="webLink" class="form-control" placeholder="https://example.com" name="chart2" [(ngModel)]="links[6].href" (keyup.enter)="modal.close('OK')">-->
+<!--                            <div class="input-group-append" *ngIf="links[6].href">-->
+<!--                              <button type="button" class="btn btn-outline-secondary" (click)="links[6].href = ''">-->
+<!--                                <fa-icon [icon]="['fas', 'times']"></fa-icon>-->
+<!--                              </button>-->
+<!--                            </div>-->
+<!--                          </div>-->
+<!--                        </div>-->
+<!--                      </form>-->
+<!--                    </div>-->
+<!--                    <div class="modal-footer">-->
+<!--                      <button type="button" class="btn btn-outline-dark" (click)="modal.close('OK')">Save</button>-->
+<!--                    </div>-->
+<!--                  </ng-template>-->
+<!--                  <button class="btn btn-sm btn-outline-primary mt-2 mb-1" (click)="showModal(linkEditor, pairStat)">Edit links...</button>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </td>-->
+<!--            <td class="text-right">{{ getTXCount(pairStat) }}</td>-->
+<!--            <td class="text-right"><strong>{{ formatPrice(pairStat.price, true) }}</strong>&nbsp;{{ pairStat.pairInfo.token0.symbol }}<br>=<br><strong>{{ formatPrice(pairStat.price, false) }}</strong>&nbsp;{{ pairStat.pairInfo.token1.symbol }}</td>-->
+<!--            <td class="text-right"><strong>{{ pairStat.liquidity | currency }}</strong>-->
+<!--              <br>-->
+<!--              <span class="small text-muted">-->
+<!--                {{ formatPrice(pairStat.pairInfo.reserve0) }}&nbsp;{{ pairStat.pairInfo.token0.symbol }}-->
+<!--                <br>{{ formatPrice(pairStat.pairInfo.reserve1) }}&nbsp;{{ pairStat.pairInfo.token1.symbol }}-->
+<!--              </span>-->
+<!--            </td>-->
+<!--            <td><a [href]="'https://bscscan.com/address/' + pairStat.pairInfo.poolAddress" target="_blank">{{-->
+<!--                pairStat.pairInfo.lpToken.name }}</a></td>-->
+<!--            <td>{{ pairStat.pairInfo.lpToken.network.name | uppercase }}</td>-->
+<!--          </tr>-->
+<!--          <tr *ngIf="authToken">-->
+<!--            <th class="borderless pt-0"></th>-->
+<!--            <td class="borderless pt-0" colspan="6">-->
+<!--              <div>-->
+<!--                <span *ngFor="let pairListInfo of pairLists">-->
+<!--                  <button type="button" class="btn btn-sm btn-outline-secondary px-1 py-0 mt-1 mr-1" (click)="toggleFavorite(pairListInfo.id, pairStat)"-->
+<!--                    *ngIf="pairListInfo.id && pairListInfo.id.length > 10 && !isFavorite(pairListInfo.id, pairStat)">-->
+<!--                    {{ pairListInfo.name }}&nbsp;<fa-icon [icon]="[isFavorite(pairListInfo.id, pairStat) ? 'fas' : 'far', 'heart']"></fa-icon>-->
+<!--                  </button>-->
+<!--                </span>  -->
+<!--              </div>-->
+<!--            </td>-->
+<!--          </tr>-->
+<!--        </tbody>-->
+<!--      </table>-->
+<!--      <span class="float-right my-3">-->
+<!--        <ngb-pagination [maxSize]="15" [collectionSize]="pagination.total || 0" [pageSize]="pagination.size"-->
+<!--          [(page)]="pagination.page" (pageChange)="onPageChange()" [directionLinks]="true">-->
+<!--        </ngb-pagination>-->
+<!--      </span>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</main>-->
+
+<router-outlet></router-outlet>

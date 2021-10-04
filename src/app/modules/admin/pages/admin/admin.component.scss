@@ -1,0 +1,143 @@
+.wrapper {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "sidebar content";
+  column-gap: 10px;
+  grid-template-rows: 50px auto;
+  grid-template-columns: 12rem auto;
+
+  .header {
+    grid-area: header;
+    .navbar {
+      height: 100%;
+      background: #2f2f38;
+      .navbar-brand {
+        color: azure;
+      }
+    }
+  }
+
+  .sidebar {
+    grid-area: sidebar;
+    overflow: auto;
+
+    background-color: #2f2f38;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+    padding: 1rem;
+    box-shadow: 5px 0px 10px 0px rgba(0,0,0,0.2);
+    ul {
+      padding: 0;
+      margin: 0;
+
+      li {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+
+        a {
+          display: block;
+          color: #eeeeee;
+          padding: 0.75rem;
+          margin: 0;
+          font-size: 1rem;
+          border-left: 4px solid transparent;
+
+          .link-name--mobile {
+            display: none;
+          }
+
+          &:hover {
+            text-decoration: none;
+            background-color: lighten(#2f2f38, 10%);
+          }
+
+          &.active {
+            background-color: lighten(#2f2f38, 15%);
+            border-left-color: #eeeeee;
+            font-weight: 600;
+            color: #eeeeee;
+          }
+
+          &.disabled {
+            color: lighten(#2f2f38, 20%);
+            cursor: not-allowed;
+
+            fa-icon {
+              color: lighten(#FF523A, 20%);
+            }
+          }
+        }
+
+        ul {
+          li {
+            padding-left: 1.75rem;
+            margin: 0;
+            list-style-type: none;
+
+            a {
+              margin-left: -1.75rem;
+              padding-left: 2.5rem;
+            }
+
+            ul {
+              li {
+                padding-left: 1.75rem;
+                margin: 0;
+                list-style-type: none;
+
+                a {
+                  margin-left: -3.5rem;
+                  padding-left: 4rem;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .scroll-wrapper {
+    grid-area: content;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: 950px) {
+  .wrapper {
+    height: 100%;
+    width: 100%;
+    column-gap: 3px;
+    grid-template-columns: 3rem auto;
+    position: absolute;
+    .sidebar {
+      padding: 0.3rem;
+      ul li a {
+        padding: 0.5rem;
+      }
+    }
+
+    .link-name {
+      display: none;
+
+      &--mobile {
+        display: block !important;
+      }
+    }
+  }
+}

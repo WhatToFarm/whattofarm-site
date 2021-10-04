@@ -1,0 +1,47 @@
+<div #wrapper class="wrapper">
+  <div class="header">
+    <nav class="navbar">
+      <a class="navbar-brand" [routerLink]="'/'">
+        De-Fi Admin
+      </a>
+    </nav>
+  </div>
+  <div class="sidebar">
+    <ul>
+      <li>
+        <a routerLink="/admin/tags" routerLinkActive="active">
+          <span class="link-name">Tags</span>
+          <span class="link-name--mobile">T</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/banner" routerLinkActive="active" disabled>
+          <span class="link-name">Banner</span>
+          <span class="link-name--mobile">B</span></a>
+      </li>
+      <li>
+        <a routerLink="/admin/users" routerLinkActive="active">
+          <span class="link-name">Users</span>
+          <span class="link-name--mobile">U</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/monitor" routerLinkActive="active">
+          <span class="link-name">Monitor</span>
+          <span class="link-name--mobile">M</span>
+        </a>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <a routerLink="/login" routerLinkActive="active">
+          <span class="link-name">Logout</span>
+          <span class="link-name--mobile">L</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="scroll-wrapper">
+    <router-outlet></router-outlet>
+  </div>
+</div>

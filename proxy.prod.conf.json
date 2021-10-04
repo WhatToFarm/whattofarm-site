@@ -1,0 +1,11 @@
+{
+    "/ws": {
+      "target": "wss://whattofarm.io",
+      "secure": true,
+      "ws": true
+    },
+    "/api/v1": {
+      "target": "https://whattofarm.io",
+      "secure": true
+    }
+}

@@ -1,0 +1,19 @@
+.d-grid {
+  display: grid;
+}
+input.form-control {
+  width: calc(100% - 40px);
+}
+
+.btn.btn-sm {
+  padding: 5px 6px 3px 6px;
+}
+
+@media (max-width: 950px) {
+  .form-inline {
+    display: block;
+  }
+  input.form-control {
+    width: 100%;
+  }
+}

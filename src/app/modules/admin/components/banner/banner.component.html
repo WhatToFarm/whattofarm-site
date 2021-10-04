@@ -1,0 +1,64 @@
+<div class="container m-0 pt-3">
+  <div class="row">
+    <div class="col">
+      <h4>Загрузить баннер</h4>
+    </div>
+  </div>
+  <form [formGroup]="bannerForm" (ngSubmit)="uploadBanner()">
+    <div class="row form-inline">
+      <div class="col">
+        <div class="form-group mb-2">
+          <input type="file" class="form-control-file" formControlName="fileName" (change)="onUpload($event, bannerForm)">
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group mb-2">
+          <label for="link_one" class="col-form-label pr-2">Link</label>
+          <input type="text" class="form-control" id="link_one" formControlName="link" placeholder="Введите link">
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group mb-2">
+          <label for="position" class="col-form-label pr-2">Position</label>
+          <select class="form-control" id="position" formControlName="position">
+            <option value=""></option>
+            <option *ngFor="let position of bannerPositions" [value]="position">{{ position }} </option>
+          </select>
+        </div>
+      </div>
+      <div class="col">
+        <button type="submit" class="btn btn--orange-outline mb-2" [disabled]="!bannerForm.valid">Загрузить</button>
+      </div>
+    </div>
+  </form>
+  <div class="row">
+    <div class="col">
+      <h4>Баннеры</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <table class="table" *ngIf="bannerList?.length">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Position</th>
+            <th>Link</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let banner of bannerList; let i = index">
+            <td>{{ i + 1}}</td>
+            <td>{{ banner.position | uppercase }}</td>
+            <td>{{ banner.url | uppercase }}</td>
+            <td>
+              <button type="button" class="btn btn-sm btn--orange-outline" (click)="deleteBanner(banner.uuid)">Удалить</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <span *ngIf="!bannerList?.length">Список баннеров пустой!</span>
+    </div>
+  </div>
+</div>

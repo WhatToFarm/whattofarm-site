@@ -1,0 +1,852 @@
+<div class="main-page">
+  <div class="header">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <div class="logo">
+            <a routerLink="/">
+              <img src="/assets/img/logo.svg" alt="">
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div ngbDropdown>
+                <button class="btn btn-dropdown btn-orange" id="dropdown" ngbDropdownToggle [attr.disabled]="'disabled'">All</button>
+                <div ngbDropdownMenu aria-labelledby="dropdown">
+                  <button ngbDropdownItem>Item - 1</button>
+                  <button ngbDropdownItem>Item - 2</button>
+                  <button ngbDropdownItem>Item - 3</button>
+                  <button ngbDropdownItem>Item - 4</button>
+                  <button ngbDropdownItem>Item - 5</button>
+                  <button ngbDropdownItem>Item - 6</button>
+                  <button ngbDropdownItem>Item - 7</button>
+                </div>
+              </div>
+            </div>
+            <input type="text" class="form-control form-control-solid" placeholder="Ticker" (keydown.enter)="search()" [(ngModel)]="searchTicker">
+            <img src="assets/img/icon-zoom.svg" alt="" class="form-control--icon clickable" (click)="search()">
+          </div>
+        </div>
+        <div class="col">
+          <div class="network--block">
+            <div class="d-flex align-items-center">
+              <img *ngIf="wsService.status | async" class="network--block--wifi" src="/assets/img/wifi.svg" alt="">
+              <img *ngIf="!(wsService.status | async)" class="network--block--wifi--dot" src="/assets/img/ellipse.svg" alt="">
+              <img class="network--block--wifi--wallet" src="/assets/img/wallet.svg" alt="">
+              <p class="network--block--text">Connect Wallet</p>
+            </div>
+            <button type="button" class="btn btn-light ml-2" (click)="login()" *ngIf="!authToken">
+              <img src="assets/img/icon-login.svg" alt="">
+              <span class="network--block--text">Log In</span>
+            </button>
+            <button type="button" class="btn btn-light ml-2" (click)="logout()" *ngIf="authToken">
+              <img src="assets/img/icon-logout.svg" alt="">
+              <span class="network--block--text">Log Out</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subheader">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-10 col-9">
+          <div class="custom-marquee">
+
+            <div>
+              <div>
+                <div *ngIf="getPriceUsd('BNB') > 0" class="subheader-block">
+                  <span class="subheader-block--text">BNB</span>
+                  <img *ngIf="getPriceDiffUsd('BNB') > 0" src="/assets/img/up.svg" alt="" class="subheader-block--icon">
+                  <img *ngIf="getPriceDiffUsd('BNB') < 0" src="/assets/img/down.svg" alt="" class="subheader-block--icon">
+                  <strong [class.text-success]="getPriceDiffUsd('BNB') > 0" [class.text-danger]="getPriceDiffUsd('BNB') < 0" class="subheader-block--value">
+                    {{ getPriceUsd('BNB') }}
+                  </strong>
+                  <span class="subheader-block--text--light">USDT</span>
+                </div>
+              </div>
+
+              <div>
+                <div *ngIf="getPriceUsd('ETH') > 0" class="subheader-block">
+                  <span class="subheader-block--text">ETH</span>
+                  <img *ngIf="getPriceDiffUsd('ETH') > 0" src="/assets/img/up.svg" alt="" class="subheader-block--icon">
+                  <img *ngIf="getPriceDiffUsd('ETH') < 0" src="/assets/img/down.svg" alt="" class="subheader-block--icon">
+                  <strong [class.text-success]="getPriceDiffUsd('ETH') > 0" [class.text-danger]="getPriceDiffUsd('ETH') < 0" class="subheader-block--value">
+                    {{ getPriceUsd('ETH') }}
+                  </strong>
+                  <span class="subheader-block--text--light">USDT</span>
+                </div>
+              </div>
+
+              <div>
+                <div *ngIf="getPriceUsd('MATIC') > 0" class="subheader-block">
+                  <span class="subheader-block--text">MATIC</span>
+                  <img *ngIf="getPriceDiffUsd('MATIC') > 0" src="/assets/img/up.svg" alt="" class="subheader-block--icon">
+                  <img *ngIf="getPriceDiffUsd('MATIC') < 0" src="/assets/img/down.svg" alt="" class="subheader-block--icon">
+                  <strong [class.text-success]="getPriceDiffUsd('MATIC') > 0" [class.text-danger]="getPriceDiffUsd('MATIC') < 0" class="subheader-block--value">
+                    {{ getPriceUsd('MATIC') }}
+                  </strong>
+                  <span class="subheader-block--text--light">USDT</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-lg-2 col-3">
+          <div class="subheader--prime-access">
+            <img src="/assets/img/prime.svg" alt="">
+            Get prime <span>&nbsp;access</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3">
+          <ul class="main-content--filter" [ngClass]="{'main-content--filter--mobile': filterBtn}">
+            <li class="main-content--filter--mobile--block">
+              <div class="row align-items-center justify-content-between">
+                <div class="col-10">
+                  <div class="logo">
+                    <a routerLink="/">
+                      <img src="/assets/img/logo.svg" alt="">
+                    </a>
+                  </div>
+                </div>
+                <div class="col-2 text-center">
+                  <img src="assets/img/icon-cancel.svg" (click)="filterBtn = false" alt="">
+                </div>
+              </div>
+            </li>
+            <label class="main-content--filter--label">Sort by</label>
+            <li class="main-content--filter--list">
+              <div class="custom-control custom-radio">
+                <input type="radio" id="liquidity" name="sort-by" class="custom-control-input" [checked]="sortField === 'liquidity'" (click)="sortBy('liquidity')">
+                <label class="custom-control-label clickable" for="liquidity">Liquidity</label>
+              </div>
+              <div class="custom-control custom-checkbox ml-3" *ngFor="let lqRange of liquidityRanges">
+                <input class="custom-control-input" type="checkbox"
+                       [checked]="minLiquidity === lqRange.minRange && maxLiquidity === lqRange.maxRange" [id]="'range_' + lqRange.value"
+                       (click)="setLiquidityRange(lqRange.minRange, lqRange.maxRange)">
+                <label class="custom-control-label" [for]="'range_' + lqRange.value">{{ lqRange.name }}</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="transactions" name="sort-by" class="custom-control-input" [checked]="sortField === 'txs'" (click)="sortBy('txs')">
+                <label class="custom-control-label clickable" for="transactions">Transactions</label>
+              </div>
+              <div class="custom-control custom-checkbox ml-3" *ngFor="let txPeriod of transactionPeriod">
+                <input class="custom-control-input" type="checkbox"
+                       [checked]="(!period && !txPeriod.value) || (period === txPeriod.value && sortField === 'txs')"
+                       [id]="'period_' + txPeriod.value"
+                       (click)="setPeriod(txPeriod.value, 'txs')">
+                <label class="custom-control-label" [for]="'period_' + txPeriod.value">{{ txPeriod.name }}</label>
+              </div>
+            </li>
+            <label class="main-content--filter--label">Networks</label>
+            <li class="main-content--filter--list">
+              <div class="custom-control custom-checkbox">
+                <input class="custom-control-input" type="checkbox" [checked]="!network" id="network_all" (click)="setNetwork(undefined)">
+                <label class="custom-control-label" for="network_all">All</label>
+              </div>
+              <div class="custom-control custom-checkbox" *ngFor="let networkInfo of networks">
+                <input class="custom-control-input" type="checkbox" [checked]="network === networkInfo.name" [id]="'network_' + networkInfo.name" (click)="setNetwork(networkInfo.name)">
+                <label class="custom-control-label" [for]="'network_' + networkInfo.name">{{ networkInfo.name | uppercase }}</label>
+              </div>
+            </li>
+            <label class="main-content--filter--label">Tags</label>
+            <li class="main-content--filter--list border-bottom">
+              <div class="custom-control custom-checkbox custom-control--selected">
+                <input class="custom-control-input" type="checkbox" value="" id="all_tags" [checked]="!activePairListId" (click)="setPairList(pairLists[0])">
+                <label class="custom-control-label" for="all_tags">{{ pairLists[0]?.name }}</label>
+                <span class="ml-2 mr-2">{{ pairLists[0]?.pairCount }}</span>
+                <img src="assets/img/arrow-down.svg" alt="">
+              </div>
+            </li>
+            <li class="main-content--filter--list border-bottom">
+              <div class="main-content--filter--tag" *ngFor="let pairListInfo of pairFeaturedList" (click)="setPairList(pairListInfo)">
+                <img src="assets/img/star-icon.svg" alt="">
+                <label class="main-content--filter--tag--text">{{ pairListInfo.name }}</label>
+                <span class="main-content--filter--tag--number">{{ pairListInfo.pairCount }}</span>
+              </div>
+            </li>
+            <div class="custom-accordion border-bottom">
+              <div class="card border-bottom" *ngFor="let groupName of groupNames">
+                <div class="card-header" [id]="'headingOne' + groupName">
+                  <button class="btn btn-link" (click)="collapseToggle(groupName)">
+                    <img src="assets/img/arrow-down-tag.svg" alt="" *ngIf="groupNamesOptions[groupName].isCollapsed">
+                    <img src="assets/img/arrow-top-tag.svg" alt="" *ngIf="!groupNamesOptions[groupName].isCollapsed">
+                    {{ groupName || 'No Group' }}
+                  </button>
+                </div>
+                <div [id]="'collapse' + groupName" class="collapse" #collapse="ngbCollapse" [(ngbCollapse)]="!!groupNamesOptions[groupName].isCollapsed">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="custom-control custom-checkbox" *ngFor="let pairListInfo of groupNamesOptions[groupName].odd">
+                          <input class="custom-control-input" [checked]="activePairListId === pairListInfo.id" type="checkbox" value="" [id]="'pair_' + pairListInfo.name" (click)="setPairList(pairListInfo)">
+                          <label class="custom-control-label" [for]="'pair_' + pairListInfo.name">{{ pairListInfo.name }}</label>
+                          <span class="custom-control-text">{{ pairListInfo.count }}</span>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="custom-control custom-checkbox" *ngFor="let pairListInfo of groupNamesOptions[groupName].even">
+                          <input class="custom-control-input" [checked]="activePairListId === pairListInfo.id" type="checkbox" value="" [id]="'pair_' + pairListInfo.name" (click)="setPairList(pairListInfo)">
+                          <label class="custom-control-label" [for]="'pair_' + pairListInfo.name">{{ pairListInfo.name }}</label>
+                          <span class="custom-control-text">{{ pairListInfo.count }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-header card-header--with-badge" id="mytags">
+                  <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <img src="assets/img/arrow-down-tag.svg" alt="">
+                    MY TAGS
+                  </button>
+                  <div class="custom-badge badge-plus">
+                    <img src="assets/img/plus-icon.svg" alt="">
+                    <span class="custom-badge--text badge-plus--text">Add</span>
+                  </div>
+                </div>
+                <div id="mytagsCollapse" class="collapse" aria-labelledby="mytags" data-parent="#accordion">
+                  <div class="card-body">
+                    empty
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--            <button *ngIf="filterBtn" class="btn btn-orange mt-3 w-100">APPLY FILTER</button>-->
+          </ul>
+          <div class="main-content--banner">
+            <app-promo-place place="side"></app-promo-place>
+          </div>
+        </div>
+        <div class="col-lg-9 list main-page--table--block">
+          <div class="banner">
+            <app-promo-place place="front"></app-promo-place>
+          </div>
+          <div class="main-page--table--filters">
+            <div class="main-page--table--filters--block">
+              <div class="main-content--filter--block main-content--filter--block--liquidity">
+                <label class="main-content--filter--label">New liquidity</label>
+                <div class="d-flex">
+                  <div class="custom-tab" [class.active]="(!period && !lqDelta.value) || (period === lqDelta.value && sortField === 'liquidity')"
+                       *ngFor="let lqDelta of liquidityDelta"
+                       (click)="setPeriod(lqDelta.value, 'liquidity')">{{ lqDelta.name }}
+                  </div>
+                  <div class="custom-tab js-filter-button" (click)="filterBtn = true"><img alt="" src="assets/img/icon-filter.svg">Filter</div>
+                </div>
+              </div>
+              <div class="main-content--filter--block main-content--filter--block--transactions">
+                <label class="main-content--filter--label">Transactions</label>
+                <div class="d-flex">
+                  <div class="custom-tab" [class.active]="(!period && !txPeriod.value) || (period === txPeriod.value && sortField === 'txs')"
+                       *ngFor="let txPeriod of transactionPeriod"
+                       (click)="setPeriod(txPeriod.value, 'txs')">{{ txPeriod.name_alt }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="main-content--filter--block--tablet">
+              <div class="d-flex">
+                <div class="main-content--filter--block main-content--filter--block--liquidity">
+                  <label class="main-content--filter--label">New liquidity</label>
+                  <div class="d-flex">
+                    <div class="custom-tab" [class.active]="(!period && !lqDelta.value) || (period === lqDelta.value && sortField === 'liquidity')"
+                         *ngFor="let lqDelta of liquidityDelta"
+                         (click)="setPeriod(lqDelta.value, 'liquidity')">{{ lqDelta.name }}
+                    </div>
+                  </div>
+                </div>
+                <div class="main-content--filter--block main-content--filter--block--transactions">
+                  <label class="main-content--filter--label">Transactions</label>
+                  <div class="d-flex">
+                    <div class="custom-tab" [class.active]="(!period && !txPeriod.value) || (period === txPeriod.value && sortField === 'txs')"
+                         *ngFor="let txPeriod of transactionPeriod"
+                         (click)="setPeriod(txPeriod.value, 'txs')">{{ txPeriod.name_alt }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="custom-tab custom-tab--tablet js-filter-button" (click)="filterBtn = true"><img alt="" src="assets/img/icon-filter.svg">Filter</div>
+            </div>
+
+            <div class="main-page--table--filters--block--pagination">
+              <ngb-pagination class="custom" [maxSize]="3" [collectionSize]="pagination.total || 0" [pageSize]="pagination.size"
+                              [(page)]="pagination.page" (pageChange)="onPageChange()" [directionLinks]="true">
+              </ngb-pagination>
+            </div>
+          </div>
+          <div class="main-page--table">
+            <table class="table custom-scroll">
+              <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">Pair</th>
+                <th>
+                  <div class="main-page--table--daily--yearly--item">
+                    <div>Daily APR</div>
+                    <div>
+                      <img src="assets/img/icon-sort.svg" alt="">
+                    </div>
+                  </div>
+                  <div class="main-page--table--daily--yearly--item">
+                    <div>Yearly APR</div>
+                    <div>
+                      <img src="assets/img/icon-sort.svg" alt="">
+                    </div>
+                  </div>
+                </th>
+                <th scope="col" class="text-right" style="width: 5%" [class.active]="sortField === 'txs'">
+                  <a routerLink="." [class.active]="sortField === 'txs'" [queryParams]="{ sortField: 'txs', sortDirection: sortField !== 'txs' ? undefined : sortDirection === 'asc' ? 'desc' : 'asc' }" queryParamsHandling="merge">
+                    <img [src]="(sortDirection === 'asc') ? 'assets/img/icon-arrow-top-active.svg' : 'assets/img/arrow-down.svg'" alt="" *ngIf="sortField === 'txs'">
+                    <!--                    <fa-icon class="ml-1" [icon]="['fas', sortDirection === 'asc' ? 'sort-amount-down-alt' : 'sort-amount-down']"
+                     [fixedWidth]="true" *ngIf="sortField === 'txs'"></fa-icon>-->
+                    TXs
+                  </a>
+                </th>
+                <th scope="col" class="text-right main-page--table--mobile-hide" style="width: 5%">Price</th>
+                <th scope="col" class="text-right main-page--table--mobile-hide" style="width: 5%" [class.active]="sortField === 'liquidity'">
+                  <a routerLink="." [class.active]="sortField === 'liquidity'" [queryParams]="{ sortField: 'liquidity', sortDirection: sortField !== 'liquidity' ? undefined : sortDirection === 'asc' ? 'desc' : 'asc' }" queryParamsHandling="merge">
+                    <img [src]="(sortDirection === 'asc') ? 'assets/img/icon-arrow-top-active.svg' : 'assets/img/arrow-down.svg'" alt="" *ngIf="sortField === 'liquidity'">
+                    <!--                    <fa-icon class="ml-1" [icon]="['fas', sortDirection === 'asc' ? 'sort-amount-down-alt' : 'sort-amount-down']" [fixedWidth]="true" *ngIf="sortField === 'liquidity'"></fa-icon>-->
+                    Liquidity
+                  </a>
+                </th>
+                <th scope="col" class="main-page--table--mobile-hide main-page--table--tablet-hide" style="width: 5%">Pool</th>
+                <th scope="col" class="main-page--table--mobile-hide main-page--table--tablet-hide" style="width: 5%">Net</th>
+              </tr>
+              </thead>
+              <tbody *ngFor="let pairStat of pairs; let pairStatIndex = index">
+              <tr>
+                <td scope="row">{{ (pairStatIndex + 1) + pagination.size * (pagination.page - 1) }}</td>
+
+                <td>
+                  <a [href]="getScanLink(pairStat)" target="_blank"><div class="main-page--table-pair-name">{{ pairStat.pairInfo.ticker }}</div></a>
+
+                  <span class="main-page--table--liquidity--mobile"><strong>{{ pairStat.liquidity | currency }}</strong></span>
+
+                  <div class="d-flex flex-wrap">
+                      <span *ngFor="let pairListInfo of pairLists">
+                        <button type="button" class="clickable-badge" (click)="toggleFavorite(pairListInfo.id, pairStat)"
+                                *ngIf="pairListInfo.id && pairListInfo.id.length > 10 && (isFavorite(pairListInfo.id, pairStat) || (!isAdmin && !pairListInfo.isSystem))"
+                                [disabled]="!isAdmin && pairListInfo.isSystem">
+                          {{ pairListInfo.name }}&nbsp;<fa-icon [icon]="[isFavorite(pairListInfo.id, pairStat) ? 'fas' : 'far', 'heart']"></fa-icon>
+                        </button>
+                      </span>
+                  </div>
+                  <div class="d-flex">
+                    <div class="main-page--table--truncate">
+                      <p>{{ pairStat.pairInfo.token0.address }}</p>
+                      <img src="assets/img/icon-copy.svg" alt="">
+                    </div>
+                    <div class="main-page--table--truncate">
+                      <p>{{ pairStat.pairInfo.token1.address }}</p>
+                      <img src="assets/img/icon-copy.svg" alt="">
+                    </div>
+                  </div>
+                </td>
+
+                <td class="text-right">
+                  <p *ngIf="pairStat.aprDay > 0" title="APR per day">{{ pairStat.aprDay | number:'1.0-2' }}%</p>
+                  <p *ngIf="pairStat.aprYear > 0" title="APR per year">{{ pairStat.aprYear | number:'1.0-2' }}%</p>
+                </td>
+
+                <td class="text-right">
+                  <div>{{ getTXCount(pairStat) }}</div>
+                </td>
+
+                <td class="text-right main-page--table--mobile-hide">
+                  <span class="small text-muted">1 {{ pairStat.pairInfo.token0.symbol}} = </span><strong>{{ pairStat.pairInfo.token0.usdPrice | currency }}</strong>
+                  <br>
+                  <span class="small text-muted">1 {{ pairStat.pairInfo.token1.symbol}} = </span><strong>{{ pairStat.pairInfo.token1.usdPrice | currency }}</strong>
+                </td>
+
+                <td class="text-right main-page--table--mobile-hide">
+                  <strong>{{ pairStat.liquidity | currency }}</strong>
+                  <br>
+                  <span class="small text-muted">
+                    {{ formatPrice(pairStat.pairInfo.reserve0) }}&nbsp;{{ pairStat.pairInfo.token0.symbol }}
+                    <br>
+                    {{ formatPrice(pairStat.pairInfo.reserve1) }}&nbsp;{{ pairStat.pairInfo.token1.symbol }}
+                  </span>
+                </td>
+
+                <td class="main-page--table--mobile-hide main-page--table--tablet-hide">
+                  <a class="text-orange" [href]="'https://bscscan.com/address/' + pairStat.pairInfo.poolAddress" target="_blank">
+                    {{ pairStat.pairInfo.lpToken.name }}
+                  </a>
+                </td>
+
+                <td class="main-page--table--mobile-hide main-page--table--tablet-hide">
+                  <div class="d-flex justify-content-between">
+                    <div>{{ pairStat.pairInfo.lpToken.network.name | uppercase }}</div>
+                    <div class="main-page--table--more-info">
+                      <button class="btn btn-sm btn-orange mb-1">Website</button>
+                      <button class="btn btn-sm btn-light">More Info</button>
+                    </div>
+                  </div>
+                </td>
+
+                <td class="main-page--table--more-info--column main-page--table--mobile-hide main-page--table--tablet-hide">
+                  <div ngbDropdown class="clickable">
+                    <img src="assets/img/icon-more.svg" ngbDropdownToggle alt="">
+                    <div ngbDropdownMenu aria-labelledby="dropdown">
+                      <button ngbDropdownItem>Website</button>
+                      <button ngbDropdownItem>More info</button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <tr class="inline-tr">
+                <td></td>
+                <td colspan="5">
+                  <ul class="inline-tr--links">
+                    <li *ngFor="let pairLink of pairStat.links">
+                      <a [href]="pairLink.href" target="_blank" *ngIf="pairLink.icon">
+                        <span [ngSwitch]="pairLink.icon">
+                          <svg *ngSwitchCase="'twitter'" width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M10.7665 2.49218C10.7741 2.60155 10.7741 2.71094 10.7741 2.82031C10.7741 6.15623 8.29953 10 3.77666 10C2.38325 10 1.08884 9.58592 0 8.8672C0.197977 8.89062 0.388314 8.89844 0.593909 8.89844C1.74364 8.89844 2.80203 8.50001 3.64722 7.82032C2.56599 7.79688 1.6599 7.07032 1.34771 6.07031C1.5 6.09373 1.65228 6.10937 1.81219 6.10937C2.033 6.10937 2.25383 6.0781 2.4594 6.02344C1.3325 5.78905 0.487291 4.77343 0.487291 3.54687V3.51563C0.814691 3.70313 1.19543 3.82032 1.59896 3.83593C0.936519 3.38279 0.502525 2.60936 0.502525 1.73436C0.502525 1.26562 0.624331 0.835928 0.837542 0.460926C2.04821 1.99217 3.86802 2.99216 5.90862 3.10155C5.87055 2.91405 5.8477 2.71876 5.8477 2.52344C5.8477 1.1328 6.94416 0 8.3071 0C9.01522 0 9.65481 0.304687 10.1041 0.796875C10.6599 0.687505 11.1929 0.476557 11.665 0.187501C11.4822 0.773452 11.0939 1.26564 10.5838 1.57812C11.0787 1.52346 11.5584 1.3828 12 1.18751C11.665 1.68749 11.2462 2.13278 10.7665 2.49218Z" fill="#FF523A"/>
+                          </svg>
+                          <svg *ngSwitchCase="'fee'" width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M0.666504 4.66665C0.666504 3.19721 1.82485 2.00092 3.33665 1.72612L3.33395 1.69696L3.33317 0.99998C3.33317 0.63179 3.63165 0.333313 3.99984 0.333313C4.36803 0.333313 4.6665 0.63179 4.6665 0.99998V1.66665L4.66369 1.72624C6.17517 2.00128 7.33317 3.19742 7.33317 4.66665C7.33317 5.03484 7.03469 5.33331 6.6665 5.33331C6.32461 5.33331 6.04283 5.07595 6.00432 4.74439L5.99984 4.66665C5.99984 3.76744 5.12274 2.99998 3.99984 2.99998C2.87694 2.99998 1.99984 3.76744 1.99984 4.66665C1.99984 5.53255 2.81317 6.27628 3.87611 6.33019L3.99984 6.33331C5.82246 6.33331 7.33317 7.65519 7.33317 9.33331C7.33317 10.8015 6.17687 11.9969 4.66702 12.2731L4.6665 13C4.6665 13.3682 4.36803 13.6666 3.99984 13.6666C3.63165 13.6666 3.33317 13.3682 3.33317 13L3.33332 12.2732C1.82314 11.9973 0.666504 10.8017 0.666504 9.33331C0.666504 8.96512 0.964981 8.66665 1.33317 8.66665C1.70136 8.66665 1.99984 8.96512 1.99984 9.33331C1.99984 10.2325 2.87694 11 3.99984 11C5.12274 11 5.99984 10.2325 5.99984 9.33331C5.99984 8.46741 5.1865 7.72368 4.12356 7.66977L3.99984 7.66665C2.17722 7.66665 0.666504 6.34477 0.666504 4.66665Z" fill="#FF523A"/>
+                          </svg>
+                          <svg *ngSwitchCase="'chart'" width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1.40876 7.8602L1.47157 7.80474L5.66683 3.61L7.86209 5.80474C8.10241 6.04506 8.48057 6.06355 8.7421 5.8602L8.8049 5.80474L11.6668 2.94333L12.5288 3.80474C12.9305 4.20645 13.6049 3.95178 13.6628 3.40909L13.6668 3.33333L13.6657 0.627077L13.6597 0.5687L13.643 0.48944L13.6269 0.438889L13.6044 0.384519L13.5695 0.319528L13.5249 0.255318L13.4716 0.195239C13.448 0.171666 13.423 0.150209 13.397 0.13089L13.3229 0.0831141L13.2477 0.0474837L13.1775 0.0238968L13.0991 0.0073452L13.0597 0.00264427L13.0002 0H10.3335C9.76538 0 9.46854 0.657009 9.81135 1.08168L9.86209 1.13807L10.7235 2L8.3335 4.39L6.13823 2.19526C5.89791 1.95494 5.51976 1.93645 5.25823 2.1398L5.19543 2.19526L0.528758 6.86193C0.268409 7.12228 0.268409 7.54439 0.528758 7.80474C0.769081 8.04506 1.14723 8.06355 1.40876 7.8602Z" fill="#FF523A"/>
+                          </svg>
+                          <svg *ngSwitchDefault width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M7.00016 0.333374C10.6821 0.333374 13.6668 3.31814 13.6668 7.00004C13.6668 10.6819 10.6821 13.6667 7.00016 13.6667C3.31826 13.6667 0.333496 10.6819 0.333496 7.00004C0.333496 3.31814 3.31826 0.333374 7.00016 0.333374ZM8.98178 7.66717H5.01852C5.09248 9.00283 5.38624 10.2188 5.8357 11.1177C6.25429 11.9549 6.70159 12.3333 7.00015 12.3333C7.29871 12.3333 7.74601 11.9549 8.16461 11.1177C8.61406 10.2188 8.90782 9.00283 8.98178 7.66717ZM12.2922 7.66737L10.317 7.66755C10.2364 9.29015 9.86481 10.7416 9.30815 11.8102C10.9069 11.0411 12.0636 9.49838 12.2922 7.66737ZM3.68333 7.66755L1.70818 7.66737C1.93673 9.49837 3.09344 11.0411 4.69259 11.8097C4.1704 10.8083 3.81116 9.47007 3.70184 7.96973L3.68333 7.66755ZM4.69216 2.18991L4.67472 2.19904C3.08466 2.97062 1.93562 4.50886 1.70807 6.33329L3.68326 6.33324C3.76385 4.71036 4.13542 3.2587 4.69216 2.18991ZM7.00013 1.66671L6.94594 1.67065C6.64905 1.71281 6.22965 2.09434 5.83568 2.88228C5.38615 3.78134 5.09237 4.99759 5.01847 6.33352H8.9818C8.9079 4.99759 8.61412 3.78134 8.16459 2.88228C7.74599 2.04509 7.29869 1.66671 7.00013 1.66671ZM9.30771 2.19036L9.32277 2.21816C9.87142 3.28431 10.2372 4.72486 10.317 6.33363L12.2922 6.33335C12.0639 4.50205 10.9071 2.95909 9.30771 2.19036Z" fill="#FF523A"/>
+                          </svg>
+                        </span>
+                        {{ pairLink.title }}
+                      </a>
+                    </li>
+                    <li *ngIf="isAdmin">
+                      <ng-template #linkEditor let-modal>
+                        <div class="modal-header">
+                          <h4 class="modal-title" id="modal-basic-title">Links</h4>
+                          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cancel')">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <form>
+                            <div class="form-group">
+                              <label for="webLink">{{ links[0].title }}</label>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text" id="basic-addon1"><fa-icon [icon]="links[0].faIcon"></fa-icon></span>
+                                </div>
+                                <input id="webLink" class="form-control" placeholder="https://example.com" name="webLink" [(ngModel)]="links[0].href" (keyup.enter)="modal.close('OK')">
+                                <div class="input-group-append" *ngIf="links[0].href">
+                                  <button type="button" class="btn btn-outline-secondary" (click)="links[0].href = ''">
+                                    <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label for="twitterLink">{{ links[1].title }}</label>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text" id="basic-addon1"><fa-icon [icon]="links[1].faIcon" [fixedWidth]="true"></fa-icon></span>
+                                </div>
+                                <input id="webLink" class="form-control" placeholder="https://twitter.com/username" name="twitter" [(ngModel)]="links[1].href" (keyup.enter)="modal.close('OK')">
+                                <div class="input-group-append" *ngIf="links[1].href">
+                                  <button type="button" class="btn btn-outline-secondary" (click)="links[1].href = ''">
+                                    <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label for="twitterLink">{{ links[2].title }}</label>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text" id="basic-addon1"><fa-icon [icon]="links[2].faIcon" [fixedWidth]="true"></fa-icon></span>
+                                </div>
+                                <input id="coingeckoLink" class="form-control" placeholder="https://coingecko.com" name="coingecko" [(ngModel)]="links[2].href" (keyup.enter)="modal.close('OK')">
+                                <div class="input-group-append" *ngIf="links[2].href">
+                                  <button type="button" class="btn btn-outline-secondary" (click)="links[2].href = ''">
+                                    <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label for="feeLink">{{ links[3].title }}</label>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text" id="basic-addon1"><fa-icon [icon]="links[3].faIcon" [fixedWidth]="true"></fa-icon></span>
+                                </div>
+                                <input id="webLink" class="form-control" placeholder="https://example.com" name="fee" [(ngModel)]="links[3].href" (keyup.enter)="modal.close('OK')">
+                                <div class="input-group-append" *ngIf="links[3].href">
+                                  <button type="button" class="btn btn-outline-secondary" (click)="links[3].href = ''">
+                                    <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label for="snapshotLink">{{ links[4].title }}</label>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text" id="basic-addon1"><fa-icon [icon]="links[4].faIcon" [fixedWidth]="true"></fa-icon></span>
+                                </div>
+                                <input id="webLink" class="form-control" placeholder="https://example.com" name="snapshot" [(ngModel)]="links[4].href" (keyup.enter)="modal.close('OK')">
+                                <div class="input-group-append" *ngIf="links[4].href">
+                                  <button type="button" class="btn btn-outline-secondary" (click)="links[4].href = ''">
+                                    <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label for="chart1Link">{{ links[5].title }}</label>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text" id="basic-addon1"><fa-icon [icon]="links[5].faIcon" [fixedWidth]="true"></fa-icon></span>
+                                </div>
+                                <input id="webLink" class="form-control" placeholder="https://example.com" name="chart1" [(ngModel)]="links[5].href" (keyup.enter)="modal.close('OK')">
+                                <div class="input-group-append" *ngIf="links[5].href">
+                                  <button type="button" class="btn btn-outline-secondary" (click)="links[5].href = ''">
+                                    <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label for="chart2Link">{{ links[6].title }}</label>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text" id="basic-addon1"><fa-icon [icon]="links[6].faIcon" [fixedWidth]="true"></fa-icon></span>
+                                </div>
+                                <input id="webLink" class="form-control" placeholder="https://example.com" name="chart2" [(ngModel)]="links[6].href" (keyup.enter)="modal.close('OK')">
+                                <div class="input-group-append" *ngIf="links[6].href">
+                                  <button type="button" class="btn btn-outline-secondary" (click)="links[6].href = ''">
+                                    <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-outline-dark" (click)="modal.close('OK')">Save</button>
+                        </div>
+                      </ng-template>
+                      <button class="btn btn-sm btn-outline-primary mt-2 mb-1" (click)="showModal(linkEditor, pairStat)">Edit links...</button>
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+
+              <tr *ngIf="isAdmin">
+                <td></td>
+                <td class="borderless" colspan="7">
+                  <div class="d-flex flex-wrap">
+                    <span *ngFor="let pairListInfo of pairLists">
+                      <button type="button" class="btn btn-sm btn-outline-secondary px-1 py-1 mt-1 mr-1" (click)="toggleFavorite(pairListInfo.id, pairStat)"
+                              *ngIf="pairListInfo.id && pairListInfo.id.length > 10 && !isFavorite(pairListInfo.id, pairStat)">
+                        {{ pairListInfo.name }}&nbsp;<fa-icon [icon]="[isFavorite(pairListInfo.id, pairStat) ? 'fas' : 'far', 'heart']"></fa-icon>
+                      </button>
+                    </span>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="row">
+            <div class="col-md-auto m-auto pagination--block">
+              <ngb-pagination class="custom" [maxSize]="6" [collectionSize]="pagination.total || 0" [pageSize]="pagination.size"
+                              [(page)]="pagination.page" (pageChange)="onPageChange()" [directionLinks]="true">
+              </ngb-pagination>
+            </div>
+          </div>
+          <div class="main-content--banner main-content--banner--mobile">
+            <app-promo-place place="side"></app-promo-place>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="main-page--footer">
+    <div class="main-page--footer--top">
+      <div class="container-fluid">
+        <div class="d-flex align-items-center mb-36">
+          <div class="w-20 mr-3">
+            <a routerLink="/">
+              <img src="/assets/img/logo.svg" alt="">
+            </a>
+          </div>
+          <div class="w-40 mr-3">
+            <input type="text" class="form-control form-control-solid" aria-label="Text input with dropdown button" placeholder="Your email">
+          </div>
+          <div class="w-20 mr-3">
+            <div class="main-page--footer--input">
+              <button type="button" class="btn btn--orange-outline">Subscribe to our news</button>
+            </div>
+          </div>
+          <div class="w-20">
+            <div class="main-page--footer--top--images">
+              <img src="/assets/img/security_logo_1.svg" alt="">
+              <img src="/assets/img/security_logo_2.svg" alt="">
+            </div>
+          </div>
+        </div>
+        <div class="main-page--footer--block">
+          <div class="w-20 mr-3">
+            <div class="main-page--footer--icons">
+              <a href="https://t.me/WhatToFarm_Chat" target="_blank">
+                <img src="/assets/img/telegram_social_1.svg" alt="">
+              </a>
+              <a href="https://t.me/WhatToFarm_Official" target="_blank">
+                <img src="/assets/img/telegram_social_2.svg" alt="">
+              </a>
+              <a href="https://twitter.com/what_to_farm" target="_blank">
+                <img src="/assets/img/twitter_social.svg" alt="">
+              </a>
+              <a href="https://github.com/WhatToFarm" target="_blank">
+                <img src="/assets/img/github_social.svg" alt="">
+              </a>
+            </div>
+          </div>
+          <div class="w-30 mr-3">
+            <label class="main-content--filter--label">Advertisement</label>
+            <li class="main-content--filter--list">
+              <a href="https://main.whattofarm.io/whattofarm-badges" target="_blank">Brand assets</a>
+            </li>
+            <li class="main-content--filter--list">
+              <a href="https://t.me/whattofarm_official" target="_blank">
+                Ads manager telegram
+                <div class="custom-badge">
+                  <span class="custom-badge--text">@whattofarm_official</span>
+                </div>
+              </a>
+            </li>
+          </div>
+          <div class="w-30 mr-3">
+            <label class="main-content--filter--label">Our contacts</label>
+            <li class="main-content--filter--list">
+              <a href="mailto:profit@whattofarm.io">
+                For partners
+                <div class="custom-badge">
+                  <span class="custom-badge--text">profit@whattofarm.io</span>
+                </div>
+              </a>
+            </li>
+            <li class="main-content--filter--list">
+              <a href="mailto:partner@whattofarm.io">
+                Press
+                <div class="custom-badge">
+                  <span class="custom-badge--text">partner@whattofarm.io</span>
+                </div>
+              </a>
+            </li>
+            <li class="main-content--filter--list">
+              <a href="mailto:help@whattofarm.io">
+                Support
+                <div class="custom-badge">
+                  <span class="custom-badge--text">help@whattofarm.io</span>
+                </div>
+              </a>
+            </li>
+            <li class="main-content--filter--list">
+              <a href="https://whattofarm.medium.com/" target="_blank">Our blog</a>
+            </li>
+          </div>
+          <div class="w-20">
+            <label class="main-content--filter--label">Docs</label>
+            <li class="main-content--filter--list"><a href="#" target="_blank">Our Whitepaper</a></li>
+            <li class="main-content--filter--list"><a href="https://main.whattofarm.io/terms" target="_blank">Terms of services</a></li>
+            <li class="main-content--filter--list"><a href="https://main.whattofarm.io/privacy" target="_blank">Privacy policy</a></li>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-page--footer--rights">
+      <div class="container-fluid">
+        <div class="main-page--footer--rights--block">
+          <div class="w-20">
+            <div class="main-page--footer--rights--text">DeFi Finance Services</div>
+          </div>
+          <div class="w-30">
+            <div class="main-page--footer--rights--text">© 2020-2021 WhatToFarm Company. All rights reserved</div>
+          </div>
+          <div class="w-50">
+            <div class="main-page--footer--blue mr-3">
+              <img src="assets/img/icon-warning.svg" alt="">
+              DYOR! Do You Own Research and are SAFU
+            </div>
+            <img src="/assets/img/logo_shield.svg" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <footer class="main-page--footer main-page--footer--mobile">
+    <div class="main-page--footer--top">
+      <div class="container-fluid">
+        <div class="d-flex align-items-center mb-4">
+          <div class="w-50 mr-2">
+            <a routerLink="/">
+              <img src="/assets/img/logo.svg" class="w-100" alt="">
+            </a>
+          </div>
+          <div class="main-page--footer--top--input--tablet">
+            <div class="w-100">
+              <input type="text" class="form-control form-control-solid" aria-label="Text input with dropdown button" placeholder="Your email">
+            </div>
+            <div class="w-100">
+              <div class="main-page--footer--input mt-3 mb-3">
+                <button type="button" class="btn btn--orange-outline w-100 ml-0">Subscribe to our news</button>
+              </div>
+            </div>
+          </div>
+          <div class="w-50">
+            <div class="main-page--footer--top--images">
+              <img src="/assets/img/security_logo_1.svg" alt="">
+              <img src="/assets/img/security_logo_2.svg" alt="">
+            </div>
+          </div>
+        </div>
+        <div class="main-page--footer--top--input">
+          <div class="w-100">
+            <input type="text" class="form-control form-control-solid" aria-label="Text input with dropdown button" placeholder="Your email">
+          </div>
+          <div class="w-100">
+            <div class="main-page--footer--input mt-3 mb-3">
+              <button type="button" class="btn btn--orange-outline w-100 ml-0">Subscribe to our news</button>
+            </div>
+          </div>
+        </div>
+        <div class="main-page--footer--block">
+          <div class="main-page--footer--block--icons">
+            <div class="main-page--footer--icons">
+              <a href="https://t.me/WhatToFarm_Chat" target="_blank">
+                <img src="/assets/img/telegram_social_1.svg" alt="">
+              </a>
+              <a href="https://t.me/WhatToFarm_Official" target="_blank">
+                <img src="/assets/img/telegram_social_2.svg" alt="">
+              </a>
+              <a href="https://twitter.com/what_to_farm" target="_blank">
+                <img src="/assets/img/twitter_social.svg" alt="">
+              </a>
+              <a href="https://github.com/WhatToFarm" target="_blank">
+                <img src="/assets/img/github_social.svg" alt="">
+              </a>
+            </div>
+          </div>
+          <div class="w-100">
+            <label class="main-content--filter--label">Advertisement</label>
+            <li class="main-content--filter--list">
+              <a href="https://main.whattofarm.io/whattofarm-badges" target="_blank">Brand assets</a>
+            </li>
+            <li class="main-content--filter--list">
+              <a href="https://t.me/whattofarm_official" target="_blank">
+                Ads manager TG
+                <div class="custom-badge">
+                  <span class="custom-badge--text">@whattofarm_official</span>
+                </div>
+              </a>
+            </li>
+
+            <div class="main-page--footer--block--icons--tablet">
+              <div class="main-page--footer--icons">
+                <a href="https://t.me/WhatToFarm_Chat" target="_blank">
+                  <img src="/assets/img/telegram_social_1.svg" alt="">
+                </a>
+                <a href="https://t.me/WhatToFarm_Official" target="_blank">
+                  <img src="/assets/img/telegram_social_2.svg" alt="">
+                </a>
+                <a href="https://twitter.com/what_to_farm" target="_blank">
+                  <img src="/assets/img/twitter_social.svg" alt="">
+                </a>
+                <a href="https://github.com/WhatToFarm" target="_blank">
+                  <img src="/assets/img/github_social.svg" alt="">
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="w-100">
+            <label class="main-content--filter--label">Our contacts</label>
+            <li class="main-content--filter--list">
+              <a href="mailto:profit@whattofarm.io">
+                For partners
+                <div class="custom-badge">
+                  <span class="custom-badge--text">profit@whattofarm.io</span>
+                </div>
+              </a>
+            </li>
+            <li class="main-content--filter--list">
+              <a href="mailto:partner@whattofarm.io">
+                Press
+                <div class="custom-badge">
+                  <span class="custom-badge--text">partner@whattofarm.io</span>
+                </div>
+              </a>
+            </li>
+            <li class="main-content--filter--list">
+              <a href="mailto:help@whattofarm.io">
+                Support
+                <div class="custom-badge">
+                  <span class="custom-badge--text">help@whattofarm.io</span>
+                </div>
+              </a>
+            </li>
+            <li class="main-content--filter--list">
+              <a href="https://whattofarm.medium.com/" target="_blank">Our blog</a>
+            </li>
+          </div>
+          <div class="w-100">
+            <label class="main-content--filter--label">Docs</label>
+            <li class="main-content--filter--list"><a href="#" target="_blank">Our Whitepaper</a></li>
+            <li class="main-content--filter--list"><a href="https://main.whattofarm.io/terms" target="_blank">Terms of services</a></li>
+            <li class="main-content--filter--list"><a href="https://main.whattofarm.io/privacy" target="_blank">Privacy policy</a></li>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-page--footer--rights">
+      <div class="container-fluid">
+        <div class="main-page--footer--rights--block">
+          <div class="main-page--footer--rights--texts">
+            <div class="main-page--footer--rights--text">DeFi Finance Services</div>
+            <div class="main-page--footer--rights--text">© 2020-2021 WhatToFarm Company. All rights reserved</div>
+          </div>
+          <div class="main-page--footer--blue--block">
+            <div class="main-page--footer--blue">
+              <img src="assets/img/icon-warning.svg" alt="">
+              DYOR! Do You Own Research and are SAFU
+            </div>
+            <img src="/assets/img/logo_shield.svg" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="settings" *ngIf="isAdmin">
+    <a routerLink="/admin/tags">
+      <img src="/assets/img/settings.svg" alt="">
+    </a>
+  </div>
+</div>
